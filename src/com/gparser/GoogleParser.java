@@ -21,6 +21,7 @@ public class GoogleParser {
         ArrayList <GoogleSearchPage> gsps = new ArrayList<>();
         Document doc = Jsoup.connect(searchLine).get();
         Elements links = doc.select("div.r");
+        Elements nextPageLinks = doc.select();
         links.forEach(link -> {
             Element a = link.child(0);
             String url = a.attr("href");
