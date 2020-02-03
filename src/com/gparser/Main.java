@@ -18,7 +18,7 @@ public class Main {
         query = sc.nextLine();
 
         ArrayList<GoogleSearchPage> gsps = new GoogleParser(query).run();
-        System.out.println(gsps);
+//        System.out.println(gsps);
 
     }
 }
