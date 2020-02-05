@@ -22,7 +22,7 @@ public class GoogleParser {
         searchLine = "https://www.google.com/search?q=" + query + "&num=20";
         ArrayList<GoogleSearchPage> gsps = new ArrayList<>();
 
-        while (!nextPageLink.isEmpty() && counter <= 1) {
+//        while (!nextPageLink.isEmpty() && counter <= 1) {
 //            System.setProperty("http.proxyHost", "77.244.42.178");
 //            System.setProperty("http.proxyPort", "4145");
             Document doc = Jsoup.connect(searchLine).timeout(10*1000).get(); ;
@@ -41,7 +41,7 @@ public class GoogleParser {
 
             });
             counter++;
-        }
+//        }
 
 
         return gsps;
