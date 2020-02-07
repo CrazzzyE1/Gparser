@@ -37,7 +37,7 @@ public class GoogleParser {
             nextPageLinks.forEach(np -> {
                 nextPageLink = np.attr("href");
                 searchLine = "https://www.google.com" + nextPageLink;
-                System.out.println(searchLine);
+//                System.out.println(searchLine);
 
             });
             counter++;

@@ -17,8 +17,19 @@ public class Main {
         System.out.println("Введите ключевое слово:");
         query = sc.nextLine();
 
+        //Парсим все ссылки по ключевому слову из поисковика Google
         ArrayList<GoogleSearchPage> gsps = new GoogleParser(query).run();
-//        System.out.println(gsps);
+
+        //Парсим все email & phones на всех страницах всех сайтов, которые нашел Google
+        for (GoogleSearchPage gsp:gsps
+             ) {
+            PageParser pageParser = new PageParser(gsp.getUrl());
+            pageParser.run();
+            gsp.setEmails(pageParser.getEmails());
+            gsp.setPhones(pageParser.getPhones());
+            System.out.println(gsp.getEmails());
+            System.out.println(gsp.getPhones());
+        }
 
     }
 }
