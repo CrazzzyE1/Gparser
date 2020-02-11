@@ -1,10 +1,7 @@
 package com.gparser;
 
-import com.sun.xml.internal.ws.api.ha.StickyFeature;
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
@@ -118,7 +115,7 @@ public class PageParser {
 //        System.out.println("Парсим все Почты на странице");
         Document doc = null;
         try {
-            doc = Jsoup.connect(url).get();
+            doc = Jsoup.connect(url).userAgent("Mozilla").get();
         } catch (IOException e) {
             e.printStackTrace();
         }
