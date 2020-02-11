@@ -19,7 +19,7 @@ public class GoogleParser {
     }
 
     public ArrayList<GoogleSearchPage> run() throws IOException {
-        searchLine = "https://www.google.com/search?q=" + query + "&num=20";
+        searchLine = "https://www.google.com/search?q=" + query + "&num=500";
         ArrayList<GoogleSearchPage> gsps = new ArrayList<>();
 
 //        while (!nextPageLink.isEmpty() && counter <= 1) {
@@ -27,13 +27,14 @@ public class GoogleParser {
 //            System.setProperty("http.proxyPort", "4145");
             Document doc = Jsoup.connect(searchLine).timeout(10*1000).get(); ;
             Elements links = doc.select("div.r");
-            Elements nextPageLinks = doc.getElementsByAttributeValue("class", "pn");
+            Elements nextPageLinks = doc.getElementsByAttributeValue("class", "fl");
             links.forEach(link -> {
                 Element a = link.child(0);
                 String url = a.attr("href");
                 String title = a.child(2).text();
                 gsps.add(new GoogleSearchPage(title, url));
             });
+
             nextPageLinks.forEach(np -> {
                 nextPageLink = np.attr("href");
                 searchLine = "https://www.google.com" + nextPageLink;
