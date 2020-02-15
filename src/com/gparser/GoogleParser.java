@@ -19,6 +19,7 @@ public class GoogleParser {
     public ArrayList<GoogleSearchPage> run() throws IOException {
         ArrayList<GoogleSearchPage> gsps = new ArrayList<>();
         for (int i = 0; i < queries.size(); i++) {
+            System.out.println("Типа парсю Google");
 //            searchLine = "https://www.google.com/search?q=" + queries.get(i) + "&num=500";
 //            // вписать задержку
 //            Document doc = Jsoup.connect(searchLine).timeout(50*1000).get(); ;
