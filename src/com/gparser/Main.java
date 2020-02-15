@@ -11,44 +11,30 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        int counter = 0;
         ArrayList<String> queries;
         ArrayList<String> cities;
 
         // Файл с поисковыми запросами
         File fileQueries = new File("C:\\Program Project\\Gparser\\asserts\\queries.txt");
         File fileCities = new File("C:\\Program Project\\Gparser\\asserts\\cities.txt");
+
+        // Файл со ссылками из поиска Google
         File fileGoogleLinks = new File("C:\\Program Project\\Gparser\\asserts\\googleLinks.txt");
         Scanner scanner = new Scanner(fileQueries);
         Scanner scanner2 = new Scanner(fileCities);
 
         queries = createQueriesList(scanner);
         cities = createQueriesList(scanner2);
-
-        queries = mixQueries(cities, queries);
-
         scanner.close();
 
-        //Создаем все запросы для Google с учетом названия города и региона поиска
-        //запихиваем регион и базовый запрос
-        //на выходе массив с поисковыми запросами - передаем Массив в GoogleParser
+        // Готовые запросы для отправки в GoogleParser
+        queries = mixQueries(cities, queries);
 
-
-        //Парсим все ссылки по ключевому слову из поисковика Google
+        // Парсим все ссылки по ключевому слову из поисковика Google
         ArrayList<GoogleSearchPage> gsps = new GoogleParser(queries).run();
 
-        //Пишем все ссылки от гугла в файл
+        // Пишем все ссылки от гугла в файл
         createOutGoogleLinksFile(fileGoogleLinks, gsps);
-
-        //Печатаем все ссылки из Google по запросу.
-//
-//        for (GoogleSearchPage gsp : gsps
-//        ) {
-//            counter++;
-//            System.out.println(counter + ". " + gsp.getTitle() + " -//- " + gsp.getUrl());
-//
-//        }
-
 
         //Парсим все email & phones на всех страницах всех сайтов, которые нашел Google
 //        for (GoogleSearchPage gsp:gsps
@@ -59,6 +45,15 @@ public class Main {
 //            gsp.setPhones(pageParser.getPhones());
 //            System.out.println(gsp.getEmails());
 //            System.out.println(gsp.getPhones());
+//        }
+
+        // Печатаем все ссылки из Google по запросу.
+//
+//        for (GoogleSearchPage gsp : gsps
+//        ) {
+//            counter++;
+//            System.out.println(counter + ". " + gsp.getTitle() + " -//- " + gsp.getUrl());
+//
 //        }
 
     }
