@@ -1,6 +1,8 @@
 package com.gparser;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -16,6 +18,7 @@ public class Main {
         // Файл с поисковыми запросами
         File fileQueries = new File("C:\\Program Project\\Gparser\\asserts\\queries.txt");
         File fileCities = new File("C:\\Program Project\\Gparser\\asserts\\cities.txt");
+        File fileGoogleLinks = new File("C:\\Program Project\\Gparser\\asserts\\googleLinks.txt");
         Scanner scanner = new Scanner(fileQueries);
         Scanner scanner2 = new Scanner(fileCities);
 
@@ -34,12 +37,17 @@ public class Main {
         //Парсим все ссылки по ключевому слову из поисковика Google
         ArrayList<GoogleSearchPage> gsps = new GoogleParser(queries).run();
 
+        //Пишем все ссылки от гугла в файл
+        createOutGoogleLinksFile(fileGoogleLinks, gsps);
+
         //Печатаем все ссылки из Google по запросу.
-        for (GoogleSearchPage gsp : gsps
-        ) {
-            counter++;
-            System.out.println(counter + ". " + gsp.getTitle() + " -//- " + gsp.getUrl());
-        }
+//
+//        for (GoogleSearchPage gsp : gsps
+//        ) {
+//            counter++;
+//            System.out.println(counter + ". " + gsp.getTitle() + " -//- " + gsp.getUrl());
+//
+//        }
 
 
         //Парсим все email & phones на всех страницах всех сайтов, которые нашел Google
@@ -53,6 +61,24 @@ public class Main {
 //            System.out.println(gsp.getPhones());
 //        }
 
+    }
+
+    public static void createOutGoogleLinksFile(File fileGoogleLinks, ArrayList<GoogleSearchPage> gsps) {
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(fileGoogleLinks);
+            for (GoogleSearchPage gsp:gsps
+            ) {
+                String result = gsp.getTitle() + " -//- " + gsp.getUrl() + "\\n";
+                try {
+                    fileOutputStream.write(result.getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public static ArrayList<String> mixQueries(ArrayList<String> cities, ArrayList<String> queries) {
