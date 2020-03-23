@@ -24,8 +24,6 @@ public class Main {
         cities = chooseRegion(country, fileAllCountries);
         chR.close();
 
-//        printArrayList(cities);
-
         // Файл с поисковыми запросами
         File fileQueries = new File("C:\\Program Project\\Gparser\\asserts\\queries.txt");
 
@@ -96,7 +94,7 @@ public class Main {
             FileOutputStream fileOutputStream = new FileOutputStream(fileGoogleLinks);
             for (GoogleSearchPage gsp : gsps
             ) {
-                String result = gsp.getTitle() + " -//- " + gsp.getUrl() + "\\n";
+                String result = gsp.getTitle() + " -//- " + gsp.getUrl() + "\n";
                 try {
                     fileOutputStream.write(result.getBytes());
                 } catch (IOException e) {
