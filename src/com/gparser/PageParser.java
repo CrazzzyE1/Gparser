@@ -165,7 +165,7 @@ public class PageParser {
             } else {
                 result = tmp.toString().trim();
                 if (result.length() >= 8 && result.length() < 43 && result.charAt(0) != ',' && result.charAt(0) != '-' && result.charAt(0) != '.') {
-//                    System.out.println(result);
+                    System.out.println(result);
                 }
                 tmp.setLength(0);
             }
