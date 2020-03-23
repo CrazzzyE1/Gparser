@@ -14,7 +14,6 @@ public class Main {
         ArrayList<String> queries;
         ArrayList<String> cities;
 
-
         //Общий файл с городами, странами и регионами
         File fileAllCountries = new File("C:\\Program Project\\Gparser\\asserts\\world-cities_txt.txt");
 
@@ -25,7 +24,7 @@ public class Main {
         cities = chooseRegion(country, fileAllCountries);
         chR.close();
 
-        printArrayList(cities);
+//        printArrayList(cities);
 
         // Файл с поисковыми запросами
         File fileQueries = new File("C:\\Program Project\\Gparser\\asserts\\queries.txt");
