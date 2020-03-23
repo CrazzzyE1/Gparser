@@ -132,20 +132,42 @@ public class PageParser {
 
     // Парсинг телефоных номеров на странице
     private void phoneSearch(String url) {
+        String text = null;
 //        System.out.println("Парсим все Телефонные номера на странице");
-        Document doc = null;
         try {
-            doc = Jsoup.connect(url).get();
+            Document doc = Jsoup.connect(url).userAgent("Mozilla").get();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            text = doc.text();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String pageText = doc.text();
-        String delimeter = " ";
-        String[] pageNumbers = pageText.split(delimeter);
 
-        for (int i = 0; i < pageNumbers.length; i++) {
-            if (pageNumbers[i].contains("8-800") || pageNumbers[i].contains("+7") || pageNumbers[i].contains("4722")) {
-                phones.add(pageNumbers[i]);
+        StringBuilder tmp = new StringBuilder();
+        boolean flag = false;
+        String ss = "0123456789+().,- ";
+        String result;
+        for (int i = 0; i < text.length(); i++) {
+            for (int j = 0; j < ss.length(); j++) {
+                if (text.charAt(i) == ss.charAt(j)) {
+                    flag = true;
+                    break;
+                } else {
+                    flag = false;
+                }
+            }
+            if (flag) {
+                tmp.append(text.charAt(i));
+            } else {
+                result = tmp.toString().trim();
+                if (result.length() >= 8 && result.length() < 43 && result.charAt(0) != ',' && result.charAt(0) != '-' && result.charAt(0) != '.') {
+                    System.out.println(result);
+                }
+                tmp.setLength(0);
             }
         }
     }
