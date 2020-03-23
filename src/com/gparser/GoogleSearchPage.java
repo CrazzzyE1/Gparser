@@ -7,17 +7,10 @@ public class GoogleSearchPage {
     private String url;
     private String domain;
     private String queries;
-    private ArrayList<String> emails;
-    private ArrayList<String> phones;
+    private String emails;
+    private String phones;
 
-
-    public GoogleSearchPage(String title, String url) {
-        this.title = title;
-        this.url = url;
-    }
-
-    public GoogleSearchPage(String title, String url, String queries) {
-        this.title = title;
+    public GoogleSearchPage(String url, String queries) {
         this.url = url;
         this.queries = queries;
     }
@@ -54,19 +47,19 @@ public class GoogleSearchPage {
         this.queries = queries;
     }
 
-    public ArrayList<String> getEmails() {
+    public String getEmails() {
         return emails;
     }
 
-    public void setEmails(ArrayList<String> emails) {
+    public void setEmails(String emails) {
         this.emails = emails;
     }
 
-    public ArrayList<String> getPhones() {
+    public String getPhones() {
         return phones;
     }
 
-    public void setPhones(ArrayList<String> phones) {
+    public void setPhones(String phones) {
         this.phones = phones;
     }
 

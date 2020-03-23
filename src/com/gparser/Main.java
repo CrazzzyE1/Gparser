@@ -44,6 +44,9 @@ public class Main {
         createOutGoogleLinksFile(fileGoogleLinks, gsps);
 
         //Парсим все email & phones на всех страницах всех сайтов, которые нашел Google
+        PageParser pageParser = new PageParser(gsps);
+        pageParser.run();
+
 //        for (GoogleSearchPage gsp:gsps
 //             ) {
 //            PageParser pageParser = new PageParser(gsp.getUrl());
@@ -94,7 +97,7 @@ public class Main {
             FileOutputStream fileOutputStream = new FileOutputStream(fileGoogleLinks);
             for (GoogleSearchPage gsp : gsps
             ) {
-                String result = gsp.getTitle() + " -//- " + gsp.getUrl() + "\n";
+                String result = gsp.getQueries() + " -//- " + gsp.getUrl() + "\n";
                 try {
                     fileOutputStream.write(result.getBytes());
                 } catch (IOException e) {
