@@ -12,6 +12,7 @@ import java.util.Random;
 public class GoogleParser {
     ArrayList<String> queries;
     String searchLine;
+    String que = "";
 
     public GoogleParser(ArrayList<String> queries) {
         this.queries = queries;
@@ -23,6 +24,7 @@ public class GoogleParser {
 
         for (int i = 0; i < queries.size(); i++) {
             int timer = (rnd.nextInt(9) + 5) * 1000;
+            que = queries.get(i);
             searchLine = "https://www.google.com/search?q=" + queries.get(i) + "&num=500";
             Document doc = Jsoup.connect(searchLine).userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
                     .timeout(5000).header("Content-Language", "en-US").get();
@@ -30,9 +32,7 @@ public class GoogleParser {
             links.forEach(link -> {
                 Element a = link.child(0);
                 String url = a.attr("href");
-                String title = a.child(2).text();
-                System.out.println(url + " // " + title);
-                gsps.add(new GoogleSearchPage(title, url));
+                gsps.add(new GoogleSearchPage(url, que));
             });
             delayTimer(timer);
         }
