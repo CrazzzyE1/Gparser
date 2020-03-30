@@ -2,10 +2,8 @@ package com.gparser;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import javax.print.Doc;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -13,83 +11,145 @@ public class PageParser {
 
     private ArrayList<GoogleSearchPage> gsps;
     private String url;
-    private StringBuilder emails;
-    private StringBuilder phones;
+    private StringBuilder emails = new StringBuilder();
+    private StringBuilder phones = new StringBuilder();
     private String domain;
     private String title;
-    private Document doc;
-    private int counter = 4;
 
     public PageParser(ArrayList<GoogleSearchPage> gsps) {
         this.gsps = gsps;
     }
 
-    public void run () throws IOException {
+    public void run () {
+        ArrayList<String> linksList = new ArrayList<>();
+        ArrayList<String> linksList2 = new ArrayList<>();
+        ArrayList<String> linksList3 = new ArrayList<>();
+        ArrayList<String> linksListResult = new ArrayList<>();
+
         for (int i = 0; i < gsps.size(); i++) {
-            counter = 4;
             url = gsps.get(i).getUrl();
             domain = domainSearch(url);
-            doc = getDocPage(url);
+            System.out.println(domain);
+
+          // **********************************************
+            Document doc = null;
+
+            try {
+                doc = Jsoup.connect(url).userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
+                        .timeout(0).header("Content-Language", "en-US").ignoreHttpErrors(true).get();
+            } catch (IOException e) {
+                System.out.println("Link is FAILED");
+                continue;
+            }
+            Elements links = doc.select("a");
             title = doc.title();
             gsps.get(i).setDomain(domain);
             gsps.get(i).setTitle(title);
 
-//            getDocLinks(url, counter);
-
-            delayTimer(2000);
-        }
-    }
-
-    //Поиск всех ссылок на странице
-    private void getDocLinks(String url, int counter) throws IOException {
-        if (counter == 0) {
-            return;
-        }
-        ArrayList<String> linksList = new ArrayList<>();
-        Document doc = Jsoup.connect(url).userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
-                .timeout(0).header("Content-Language", "en-US").get();
-        Elements links = doc.select("a");
-        for (int i = 0; i < links.size(); i++) {
-            String link = links.get(i).attr("abs:href");
-            if(link.contains(domain) && !link.contains("#")){
-                getDocLinks(link, counter--);
+            for (int j = 0; j < links.size(); j++) {
+                String link = links.get(j).attr("abs:href");
+                if (!link.isEmpty() && link.contains(domain) && !link.contains("#") && !linksList.contains(link)
+                        && !link.contains(".rss") && !link.contains(".jpg") && !link.contains(".gif")
+                        && !link.contains(".pdf") && !link.contains(".xls") && !link.contains(".doc")
+                        && !link.contains(".avi") && !link.contains(".zip") && !link.contains("upload")) {
+                    linksList.add(link);
+                    linksListResult.add(link);
+                }
             }
+
+//            for (int ii = 0; ii < linksList.size(); ii++) {
+//                doc = Jsoup.connect(linksList.get(ii)).userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
+//                        .timeout(0).header("Content-Language", "en-US").ignoreHttpErrors(true).get();
+//                Elements links2 = doc.select("a");
+//                for (int j = 0; j < links2.size(); j++) {
+//                    String link = links2.get(j).attr("abs:href");
+//                    if (link.contains(domain) && !link.contains("#") && !linksList2.contains(link) && !linksList.contains(link)
+//                            && !link.contains(".rss") && !link.contains(".jpg") && !link.contains(".gif")
+//                            && !link.contains(".pdf") && !link.contains(".xls") && !link.contains(".doc")
+//                            && !link.contains(".avi") && !link.contains(".zip") && !link.contains("upload")) {
+//                        linksList2.add(link);
+//                        linksListResult.add(link);
+//
+//                    }
+//                }
+//            }
+
+//            for (int jj = 0; jj < linksList2.size(); jj++) {
+//                doc = Jsoup.connect(linksList2.get(jj)).userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
+//                        .timeout(0).header("Content-Language", "en-US").ignoreHttpErrors(true).get();
+//                Elements links3 = doc.select("a");
+//                for (int j = 0; j < links3.size(); j++) {
+//                    String link = links3.get(j).attr("abs:href");
+//                    if (link.contains(domain) && !link.contains("#") && !linksList3.contains(link) && !linksList2.contains(link) && !linksList.contains(link)
+//                            && !link.contains(".rss") && !link.contains(".jpg") && !link.contains(".gif")
+//                            && !link.contains(".pdf") && !link.contains(".xls") && !link.contains(".doc")
+//                            && !link.contains(".avi") && !link.contains(".zip") && !link.contains("upload")) {
+//                        linksList3.add(link);
+//                        linksListResult.add(link);
+//                    }
+//                }
+//            }
+
+          // ************************************************
+
+            for (int ff = 0; ff < linksListResult.size(); ff++) {
+
+                try {
+                    doc = Jsoup.connect(linksListResult.get(ff)).userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
+                            .timeout(0).header("Content-Language", "en-US").ignoreHttpErrors(true).get();
+                } catch (IOException e) {
+                    System.out.println("Error Link");
+                    continue;
+                }
+                emails.append(getDocEmails(doc));
+//                getDocPhones(doc);
+            }
+            System.out.println(emails);
         }
+
+
+
     }
 
     //Поиск всех телефонов на странице
     private void getDocPhones(Document doc) {
-        System.out.println("getDocPhones " + title);
+        System.out.println("getDocPhones");
     }
 
     //Поиск всех E-mails на странице
-    private void getDocEmails(Document doc) {
-        System.out.println("getDocEmails " + title);
+    private StringBuilder getDocEmails(Document doc) {
+        StringBuilder em = new StringBuilder();
+        String pageText = doc.text();
+        String delimeter = " ";
+        String[] pageWords = pageText.split(delimeter);
 
-    }
-
-    //Поиск всех ссылок на странице
-    private Document getDocPage(String url) throws IOException {
-        Document doc = Jsoup.connect(url).userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
-                .timeout(0).header("Content-Language", "en-US").get();
-        return doc;
+        for (int i = 0; i < pageWords.length; i++) {
+            if(pageWords[i].contains("@") && !emails.toString().contains(pageWords[i])) {
+                em.append(pageWords[i] + "; ");;
+            }
+        }
+        return em;
     }
 
     // поиск домена
     private String domainSearch(String url) {
         String domain = null;
         int count = 0;
+        int start = 0;
 
         for (int i = 0; i < url.length(); i++) {
             if (url.charAt(i) == '/') {
                 count++;
+                if (count == 2) {
+                    start = i + 1;
+                }
                 if (count == 3) {
                     count = i + 1;
                     break;
                 }
             }
         }
-        domain = url.substring(0, count);
+        domain = url.substring(start, count);
         return domain;
     }
 
@@ -115,60 +175,6 @@ public class PageParser {
 //
 //    }
 //
-//    //Поиск всех ссылок на странице
-//    private void get_links(String url) {
-//
-//        try {
-//            Document doc = Jsoup.connect(url).userAgent("Mozilla").get();
-//            Elements links = doc.select("a");
-//
-//            if (links.isEmpty()) {
-//                return;
-//            }
-//
-//            links.stream().map((link) -> link.attr("abs:href")).forEachOrdered((this_url) -> {
-//                boolean add = uniqueURL.add(this_url);
-//                if (add && this_url.contains(domain) && !this_url.contains(".pdf")
-//                        && !this_url.contains(".jpg") && !this_url.contains(".rss")
-//                        && !this_url.contains(".gif") ) {
-////                    System.out.println(this_url);
-//                    emailSearch(this_url);
-//                    phoneSearch(this_url);
-//                    linkscount--;
-//                    System.out.print(linkscount + " ");
-//                    if(linkscount > 0) {
-//                        get_links(this_url);
-//                    }
-//                }
-//            });
-//
-//        } catch (IOException ex) {
-//
-//        }
-//    }
-//
-//
-//
-//
-//    // Парсинг email на странице
-//    private void emailSearch(String url) {
-////        System.out.println("Парсим все Почты на странице");
-//        Document doc = null;
-//        try {
-//            doc = Jsoup.connect(url).userAgent("Mozilla").get();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        String pageText = doc.text();
-//        String delimeter = " ";
-//        String[] pageWords = pageText.split(delimeter);
-//
-//        for (int i = 0; i < pageWords.length; i++) {
-//            if (pageWords[i].contains("@")) {
-//                emails.add(pageWords[i]);
-//            }
-//        }
-//    }
 //
 //    // Парсинг телефоных номеров на странице
 //    private void phoneSearch(String url) {
