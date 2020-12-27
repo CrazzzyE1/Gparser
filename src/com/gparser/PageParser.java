@@ -32,7 +32,7 @@ public class PageParser {
             System.out.println(domain);
 
           // **********************************************
-            Document doc = null;
+            Document doc;
 
             try {
                 doc = Jsoup.connect(url).userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0")
@@ -125,7 +125,7 @@ public class PageParser {
 
         for (int i = 0; i < pageWords.length; i++) {
             if(pageWords[i].contains("@") && !emails.toString().contains(pageWords[i])) {
-                em.append(pageWords[i] + "; ");;
+                em.append(pageWords[i]).append("; ");
             }
         }
         return em;
@@ -133,7 +133,7 @@ public class PageParser {
 
     // поиск домена
     private String domainSearch(String url) {
-        String domain = null;
+        String domain;
         int count = 0;
         int start = 0;
 
